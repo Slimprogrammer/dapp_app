@@ -9,11 +9,12 @@
   "scripts": {
     "admin:start": "npm run start --workspace=admin",
     "client:start": "npm run start --workspace=client",
-    "server:start": "npm run start --workspace=mysql-server",
+    "server:start": "npm run start --workspace=server",
     "admin": "concurrently \"npm run server:start\" \"npm run admin:start\"",
     "client": "concurrently \"npm run server:start\" \"npm run client:start\"",
     "all": "concurrently \"npm run server:start\" \"npm run client:start\" \"npm run admin:start\"",
-    "start": "concurrently \"npm run server:start\" \"npm run client:start\" \"npm run admin:start\""
+    "start": "concurrently \"npm run server:start\" \"npm run client:start\" \"npm run admin:start\"",
+    "start-all": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"yellow,blue\" \"npm run server:start\" \"npm run client:start\""
   },
   "devDependencies": {
     "concurrently": "^7.0.0",

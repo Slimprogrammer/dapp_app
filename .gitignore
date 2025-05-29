@@ -1,4 +1,4 @@
 node_modules
-apps/admin-app/node_modules
-apps/client-app/node_modules
-apps/server-app/node_modules
+apps/admin/node_modules
+apps/client/node_modules
+apps/server/node_modules

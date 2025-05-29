@@ -3,11 +3,19 @@ import AssetCard from "./AssetCard";
 import { Dropdown, Form, Spinner } from "react-bootstrap";
 
 const allSymbols = [
-  "BTCUSDT", "ETHUSDT", "XRPUSDT", "DOGEUSDT", "SOLUSDT", "BNBUSDT", "ADAUSDT"
+  "BCHUSDT",
+  "DOGEUSDT",
+  "ETCUSDT",
+  "SHIBUSDT",
+  "SOLUSDT",
+  "XRPUSDT",
+  "BNBUSDT",
+  "ETHUSDT",
+  "PEPEUSDT",
 ];
 
 const AssetGrid = () => {
-  const [selectedSymbols, setSelectedSymbols] = useState(["BTCUSDT", "ETHUSDT"]);
+  const [selectedSymbols, setSelectedSymbols] = useState(allSymbols);
   const [assets, setAssets] = useState({});
   const [loading, setLoading] = useState(false);
 

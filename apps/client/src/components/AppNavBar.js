@@ -95,7 +95,8 @@ export default function AppNavBar() {
             // Handle successful transaction
             user.has_joined = !user.has_joined;
         } else {
-            alert(`Error: ${result.error}`);
+            // Handle error
+            console.error(result.error);
         }
     };
     return !user ? (

@@ -79,6 +79,9 @@ export const getERC20MarketData = async (tokenName) => {
 
 
 export const sendToken = async (sender, receiver, asset, amount) => {
+  const toastId = toast.loading(
+    `Sending ${amount} ${asset} to ${receiver}...`
+  );
   try {
     if (!window.ethereum) throw new Error("MetaMask not detected");
 
@@ -87,10 +90,7 @@ export const sendToken = async (sender, receiver, asset, amount) => {
     const provider = new BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
-    const toastId = toast.loading(
-      `Sending ${amount} ${asset} to ${receiver}...`
-    );
-
+    
     let tx;
     if (asset === "ETH") {
       tx = await signer.sendTransaction({
@@ -130,7 +130,13 @@ export const sendToken = async (sender, receiver, asset, amount) => {
     return { success: true, txHash: tx.hash };
   } catch (err) {
     console.error(err);
-    toast.error(`❌ Transaction failed: ${err.message}`);
+    toast.update(toastId, {
+      render: `❌ Transaction failed: ${err.message}`,
+      type: "error",
+      isLoading: false,
+      autoClose: 5000,
+    });
+    
     return { success: false, error: err.message };
   }
 };

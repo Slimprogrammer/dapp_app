@@ -1,25 +1,46 @@
+import Asset from "./Asset";
+
 class User {
   #data = {};
+  #assets = {}; // key: asset_name, value: Asset instance
   #onChangeCallback = null;
 
-  constructor(userData) {
+  constructor(userData, assetDataArray = []) {
     this.#data = { ...userData };
-  }
 
+    // Initialize asset instances
+    for (const assetData of assetDataArray) {
+      const asset = new Asset(assetData);
+      asset.onChange(this.#handleAssetChange.bind(this));
+      this.#assets[assetData.asset_name] = asset;
+    }
+  }
   // Set onChange callback
   onChange(callback) {
     this.#onChangeCallback = callback;
   }
 
   // Trigger change
+  // Trigger change for user data
   #triggerChange(key, newValue, oldValue) {
     if (this.#onChangeCallback && newValue !== oldValue) {
-      console.log("User data changed:", key, newValue, oldValue);
-      // Call the callback with the changed data
-      // this.#onChangeCallback({ key, newValue, oldValue });
-      // Call the callback with the entire user data
-      // this.#onChangeCallback(this.#data);
-      this.#onChangeCallback({ key, newValue, oldValue });
+      this.#onChangeCallback({
+        type: "user",
+        key,
+        newValue,
+        oldValue,
+        user_id: this.#data.user_id,
+      });
+    }
+  }
+
+  // Handle change in any asset
+  #handleAssetChange(change) {
+    if (this.#onChangeCallback) {
+      this.#onChangeCallback({
+        type: "asset",
+        ...change,
+      });
     }
   }
 
@@ -104,7 +125,11 @@ class User {
     return this.#data.total_asset_staked;
   }
   set total_asset_staked(val) {
-    this.#triggerChange("total_asset_staked", val, this.#data.total_asset_staked);
+    this.#triggerChange(
+      "total_asset_staked",
+      val,
+      this.#data.total_asset_staked
+    );
     this.#data.total_asset_staked = val;
   }
 
@@ -148,7 +173,11 @@ class User {
     return this.#data.total_asset_pending;
   }
   set total_asset_pending(val) {
-    this.#triggerChange("total_asset_pending", val, this.#data.total_asset_pending);
+    this.#triggerChange(
+      "total_asset_pending",
+      val,
+      this.#data.total_asset_pending
+    );
     this.#data.total_asset_pending = val;
   }
 
@@ -156,7 +185,11 @@ class User {
     return this.#data.total_asset_traded;
   }
   set total_asset_traded(val) {
-    this.#triggerChange("total_asset_traded", val, this.#data.total_asset_traded);
+    this.#triggerChange(
+      "total_asset_traded",
+      val,
+      this.#data.total_asset_traded
+    );
     this.#data.total_asset_traded = val;
   }
 
@@ -164,7 +197,11 @@ class User {
     return this.#data.total_asset_earned;
   }
   set total_asset_earned(val) {
-    this.#triggerChange("total_asset_earned", val, this.#data.total_asset_earned);
+    this.#triggerChange(
+      "total_asset_earned",
+      val,
+      this.#data.total_asset_earned
+    );
     this.#data.total_asset_earned = val;
   }
 
@@ -180,11 +217,53 @@ class User {
     this.#data.current_asset_staked = val;
   }
 
+  // ===================== ASSETS MANAGEMENT =====================
+  getAsset(assetName) {
+    return this.#assets[assetName] || null;
+  }
 
-  // Get full key-value pair object
+  printAssets() {
+    console.log(this.#assets);
+  }
+  setAsset(assetData) {
+    const name = assetData.asset_name;
+
+    if (this.#assets[name]) {
+      // Update existing asset
+      const asset = this.#assets[name];
+      Object.entries(assetData).forEach(([key, value]) => {
+        if (key in asset) {
+          asset[key] = value;
+        }
+      });
+    } else {
+      // Create new asset
+      const asset = new Asset(assetData);
+      asset.onChange(this.#handleAssetChange.bind(this));
+      this.#assets[name] = asset;
+    }
+  }
+
+  getAllAssets() {
+    return Object.values(this.#assets);
+  }
+
+  // ===================== EXPORT METHODS =====================
   toKeyValue() {
     return { ...this.#data };
   }
+
+  toFullObject() {
+    return {
+      ...this.#data,
+      assets: Object.fromEntries(
+        Object.entries(this.#assets).map(([name, asset]) => [
+          name,
+          asset.toKeyValue(),
+        ])
+      ),
+    };
+  }
 }
-// Export the User class
+
 export default User;

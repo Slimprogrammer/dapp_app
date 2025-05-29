@@ -1,7 +1,6 @@
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 const assets_list = [
-  "BTC",
   "USDT",
   "BCH",
   "DOGE",

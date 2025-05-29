@@ -15,8 +15,8 @@ export const useConnectionStore = create((set) => ({
   wallet_error: null,
   user: null,
 
-  setUser: (userData) => {
-    const user = new User(userData);
+  setUser: (userData, assetData) => {
+    const user = new User(userData, assetData);
     
     user.onChange((data) => {
       const { socket } = useConnectionStore.getState();
@@ -60,11 +60,17 @@ export const useConnectionStore = create((set) => ({
       });
       console.log("🔗 Socket connected");
     });
-    socket?.on("user_data", (data) => {
+    socket?.on("user_data", (userData, assetData) => {
       const { setUser } = useConnectionStore.getState();
-      console.log("User data received from server in store:", data);
-      setUser(data);
+      console.log(
+        "User data received from server in store:",
+        userData,
+        assetData
+      );
+      setUser(userData,assetData);
     });
+    
+    
     socket.on("disconnect", () => {
       set({ socketConnected: false, socket_error: "Socket Disconnected" });
       console.warn("⚠️ Socket disconnected");

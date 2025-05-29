@@ -8,6 +8,7 @@ import WalletError from "./pages/WalletError";
 import UnsupportedBrowser from "./pages/UnsupportedBrowser";
 import AppNavBar from "./components/AppNavBar";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import NotificationToast from "./utils/NotificationToast";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -59,7 +60,10 @@ const App = () => {
 
             <AppNavBar />
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />}  />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
               <Route path="/not-found" element={<NotFound />} />
               <Route path="/error" element={<WalletError />} />
               <Route path="/not-supported" element={<UnsupportedBrowser />} />
