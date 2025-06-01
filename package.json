@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "admin:start": "npm run start --workspace=admin",
+    "admin:install": "yarn install --workspace=admin",
     "client:start": "npm run start --workspace=client",
     "server:start": "npm run start --workspace=server",
     "admin": "concurrently \"npm run server:start\" \"npm run admin:start\"",

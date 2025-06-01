@@ -1,17 +1,31 @@
 import { getAssetLogo } from "../utils/Helpers";
+import { getAssetData } from "../utils/binanceHelpers";
 
 class Asset {
   #data = {};
+  #market_data = null;
   #onChangeCallback = null;
   #logoUrl = null; // Private property to store the logo URL
+  #marketData = null; // ← New private property
+
   constructor(assetData) {
     this.#data = { ...assetData };
     this.initialize(assetData.asset_name);
   }
 
-  async initialize(asset_name) {
+   async initialize(asset_name) {
     this.logoUrl = await getAssetLogo(asset_name);
+
+    const marketData = await getAssetData(asset_name);
+    if (marketData) {
+      this.#marketData = marketData;
+    }
+   }
+   get marketData() {
+    return this.#marketData;
   }
+
+
   // Set onChange callback
   onChange(callback) {
     this.#onChangeCallback = callback;
@@ -40,40 +54,35 @@ class Asset {
     this.#triggerChange("id", val, this.#data.id);
     this.#data.id = val;
   }
+  get price() {
+    return this.#market_data.price;
+  }
+  set price(val) {
+    this.#market_data.price = val;
+  }
+  get volume() {
+    return this.#market_data.volume;
+  }
+  set volume(val) {
+    this.#market_data.volume = val;
+  }
+
+  get market_data() {
+    return this.#market_data;
+  }
+  set market_data(val) {
+    this.#market_data = val;
+  }
+
   get logoUrl() {
-    return this.logoUrl;
+    return this.#logoUrl;
   }
   set logoUrl(val) {
     // Added a setter if you ever need to manually set it
     // this.#triggerChange("logoUrl", val, this.#logoUrl);
     this.#logoUrl = val;
   }
-  /* set logoUrl(val) {
-    const baseUrl = "https://data-api.coindesk.com/asset/v2/metadata";
-    const params = {
-      asset_lookup_priority: "SYMBOL",
-      quote_asset: "USD",
-      asset_language: "en-US",
-      assets: "PEPE",
-      api_key:
-        "1034ebf65c30ef02a206585ffdf968e545fea4e3d4db7c718b518a0fd96742a6",
-    };
-    const url = new URL(baseUrl);
-    url.search = new URLSearchParams(params).toString();
-
-    const options = {
-      method: "GET",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-    };
-
-    fetch(url, options)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json["LOGO_URL"]);
-        console.log(json.LOGO_URL);
-      })
-      .catch((err) => console.log(err));
-  } */
+  
   get user_id() {
     return this.#data.user_id;
   }
@@ -187,7 +196,12 @@ class Asset {
   }
 
   toKeyValue() {
-    return { ...this.#data, logoUrl: this.#logoUrl }; // Include logoUrl in the exported data
+    return {
+      ...this.#data,
+      logoUrl: this.#logoUrl,
+      marketData: this.#marketData, // ← Include it here optionally
+    };
+
   }
 }
 
