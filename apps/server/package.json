@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "nodejs run server.js"
+    "test": "node index.js"
   },
   "keywords": [],
   "author": "",
