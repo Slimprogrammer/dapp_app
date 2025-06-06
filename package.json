@@ -7,15 +7,15 @@
     "./apps/*"
   ],
   "scripts": {
-    "admin:start": "npm run start --workspace=admin",
-    "admin:install": "yarn install --workspace=admin",
+    "client:install": "npm install --workspace=client",
+    "server:install": "npm install --workspace=server",
+    "install": "npm run client:install && npm run server:install",
+    "client:build": "npm run build --workspace=client",
+    "server:build": "npm run build --workspace=server",
     "client:start": "npm run start --workspace=client",
     "server:start": "npm run start --workspace=server",
-    "admin": "concurrently \"npm run server:start\" \"npm run admin:start\"",
-    "client": "concurrently \"npm run server:start\" \"npm run client:start\"",
-    "all": "concurrently \"npm run server:start\" \"npm run client:start\" \"npm run admin:start\"",
-    "start": "concurrently \"npm run server:start\" \"npm run client:start\" \"npm run admin:start\"",
-    "start-all": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"yellow,blue\" \"npm run server:start\" \"npm run client:start\""
+    "all": "concurrently \"npm run server:start\" \"npm run client:start\"",
+    "start": "npm run all"
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
